@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Messaging;
 using mvvm_light_sample.Common;
 using System.Diagnostics;
 using System.Windows;
+using mvvm_light_sample.Model;
 
 namespace mvvm_light_sample.ViewModel
 {
@@ -132,24 +133,34 @@ namespace mvvm_light_sample.ViewModel
 
         private void ProgressStart()
         {
-            Messenger.Default.Send<ProgressMessage>(
-                new ProgressMessage()
+            var parameter = new ProgressParameter()
                 {
-                    Message = "ˆ—’†‚Å‚·",
-                    ProgressAction = () =>
-                    {
-                        for (int i = 0; i < 100; i++)
-                        {
-                            System.Threading.Thread.Sleep(100);
-                            Debug.WriteLine(i.ToString());
-                        }
-                    },
+                    IsIndeterminate = false,
+                    Max = 100,
+                    Message = "ˆ—’†‚Å‚·"
+                };
 
-                    Callback = (result) =>
-                    {
-                        Debug.WriteLine(result.ToString());
-                    }
-                });
+            parameter.ProgressAction = (tokenSource) =>
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    parameter.Value++;
+                    if (tokenSource.IsCancellationRequested)
+                        break;
+
+                    System.Threading.Thread.Sleep(100);
+                    Debug.WriteLine(i.ToString());
+                }
+            };
+
+            Messenger.Default.Send<ProgressMessage>(new ProgressMessage()
+            {
+                Parameter = parameter,
+                Callback = (result) =>
+                {
+                    Debug.WriteLine(result.ToString());
+                }
+            });
         }
 
 

@@ -27,9 +27,9 @@
       <RowDefinition Height="33*"/>
       <RowDefinition Height="61*"/>
     </Grid.RowDefinitions>
-    <ProgressBar Grid.Row="3" Grid.Column="1" Maximum="{Binding Max}" Value="{Binding Value}" IsIndeterminate="True"/>
+        <ProgressBar Grid.Row="3" Grid.Column="1" Maximum="{Binding Parameter.Max}" Value="{Binding Parameter.Value}" IsIndeterminate="{Binding Parameter.IsIndeterminate}"/>
     <Button Content="Cancel" Grid.Column="1" HorizontalAlignment="Center" Height="38" Grid.Row="4" VerticalAlignment="Center"  Width="114" Command="{Binding CancelCommand}"/>
-    <TextBlock Grid.Column="1" TextWrapping="Wrap" Grid.Row="1" FontSize="20" Text="{Binding Message}"/>
+        <TextBlock Grid.Column="1" TextWrapping="Wrap" Grid.Row="1" FontSize="20" Text="{Binding Parameter.Message}"/>
 
   </Grid>
 </Window>

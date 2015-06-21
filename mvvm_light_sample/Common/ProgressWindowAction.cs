@@ -18,9 +18,7 @@ namespace mvvm_light_sample.Common
             var msg = parameter as ProgressMessage;
             if (msg != null)
             {
-                var vm = new ProgressWindowViewModel();
-                vm.MyAction = msg.ProgressAction;
-                vm.Message = msg.Message;
+                var vm = new ProgressWindowViewModel() { Parameter = msg.Parameter };
                 var window = new ProgressWindow() { DataContext = vm };
 
                 window.ShowDialog();

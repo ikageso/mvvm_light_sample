@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.ComponentModel;
+using mvvm_light_sample.Model;
 
 namespace mvvm_light_sample.Common
 {
     public class ProgressMessage
     {
-        public string Message { get; set; }
-        public Action ProgressAction { get; set; }
+        public ProgressParameter Parameter { get; set; }
         public Action<object> Callback { get; set; }
+
     }
 }

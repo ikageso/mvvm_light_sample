@@ -84,6 +84,7 @@
     <Compile Include="Common\SaveFileAction.cs" />
     <Compile Include="Common\SaveFileMessage.cs" />
     <Compile Include="Common\SaveFileTrigger.cs" />
+    <Compile Include="Model\ProgressParameter.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ProgressWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
