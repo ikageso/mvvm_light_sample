@@ -1,0 +1,63 @@
+﻿<Window x:Class="mvvm_light_sample.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        DataContext="{Binding Main, Source={StaticResource Locator}}"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cm="clr-namespace:mvvm_light_sample.Common"
+        Title="MainWindow" Height="479" Width="587">
+    <i:Interaction.Triggers>
+        <cm:MessageBoxTrigger>
+            <cm:MessageBoxAction/>
+        </cm:MessageBoxTrigger>
+        <cm:OpenFileTrigger>
+            <cm:OpenFileAction/>
+        </cm:OpenFileTrigger>
+        <cm:SaveFileTrigger>
+            <cm:SaveFileAction/>
+        </cm:SaveFileTrigger>
+        <cm:ProgressMessageTrigger>
+            <cm:ProgressWindowAction/>
+        </cm:ProgressMessageTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <WrapPanel Name="wrapPanel1">
+            <GroupBox Header="File" Height="94" Name="groupBox1" Width="529" Margin="3">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110*" />
+                        <ColumnDefinition Width="448*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding OpenFileCommand}" Content="Open File" Name="button2" Margin="5" />
+                    <Button Command="{Binding SaveFileCommand}" Content="Save File" Name="button3" Grid.Row="1" Margin="5" />
+                    <TextBox Text="{Binding OpenFileName}" Name="textBox1" Grid.Column="1" Margin="5" />
+                    <TextBox Text="{Binding SaveFileName}" Name="textBox2" Grid.Column="1" Grid.Row="1" Margin="5" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="処理中ダイアログ" Height="73" Name="groupBox2" Width="212" Margin="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding ProgressStartCommand}" Content="処理中開始" Name="button4" Margin="5" />
+                    <Button Content="処理中止" Name="button5" Grid.Column="1" Margin="5" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="MessageBox" Height="73" Name="groupBox3" Width="113" Margin="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="54*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding MessageBoxButtonCommand}" Content="MessageBox" Name="button1" Margin="5" />
+                </Grid>
+            </GroupBox>
+        </WrapPanel>
+    </Grid>
+</Window>
