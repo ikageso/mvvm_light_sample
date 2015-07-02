@@ -38,17 +38,6 @@
                     <TextBox Text="{Binding SaveFileName}" Name="textBox2" Grid.Column="1" Grid.Row="1" Margin="5" />
                 </Grid>
             </GroupBox>
-            <GroupBox Header="処理中ダイアログ" Height="73" Name="groupBox2" Width="212" Margin="3">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Command="{Binding ProgressStartCommand}" Content="処理中開始" Name="button4" Margin="5" />
-                    <Button Content="処理中止" Name="button5" Grid.Column="1" Margin="5" />
-                </Grid>
-            </GroupBox>
             <GroupBox Header="MessageBox" Height="73" Name="groupBox3" Width="113" Margin="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -58,6 +47,29 @@
                     <Button Command="{Binding MessageBoxButtonCommand}" Content="MessageBox" Name="button1" Margin="5" />
                 </Grid>
             </GroupBox>
+            <GroupBox Header="処理中ダイアログ(進捗表示あり)" Height="73" Name="groupBox4" Width="215">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding ProgressStartCommand1}" Content="処理中開始" Margin="5" Name="button6" />
+                    <Button Content="処理中止" Grid.Column="1" Margin="5" Name="button7" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="処理中ダイアログ(進捗表示なし)" Height="73" Name="groupBox2" Width="217" Margin="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding ProgressStartCommand2}" Content="処理中開始" Name="button4" Margin="5" />
+                    <Button Content="処理中止" Name="button5" Grid.Column="1" Margin="5" />
+                </Grid>
+            </GroupBox>
+
         </WrapPanel>
     </Grid>
 </Window>

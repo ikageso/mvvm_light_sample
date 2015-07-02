@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Threading;
 
-namespace mvvm_light_sample.Model
+namespace mvvm_light_sample.Common
 {
     public class ProgressParameter : INotifyPropertyChanged
     {

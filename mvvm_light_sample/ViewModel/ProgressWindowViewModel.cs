@@ -10,7 +10,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using mvvm_light_sample.Model;
+using mvvm_light_sample.Common;
 
 namespace mvvm_light_sample.ViewModel
 {

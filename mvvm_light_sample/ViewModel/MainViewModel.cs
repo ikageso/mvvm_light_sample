@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Messaging;
 using mvvm_light_sample.Common;
 using System.Diagnostics;
 using System.Windows;
+using mvvm_light_sample.Common;
 using mvvm_light_sample.Model;
 
 namespace mvvm_light_sample.ViewModel
@@ -38,14 +39,16 @@ namespace mvvm_light_sample.ViewModel
             MessageBoxButtonCommand = new RelayCommand(MessageBoxButton);
             OpenFileCommand = new RelayCommand(OpenFile);
             SaveFileCommand = new RelayCommand(SaveFile);
-            ProgressStartCommand = new RelayCommand(ProgressStart);
+            ProgressStartCommand1 = new RelayCommand(ProgressStart1);
+            ProgressStartCommand2 = new RelayCommand(ProgressStart2);
         }
 
         #region プロパティ
         public RelayCommand MessageBoxButtonCommand { get; set; }
         public RelayCommand OpenFileCommand { get; set; }
         public RelayCommand SaveFileCommand { get; set; }
-        public RelayCommand ProgressStartCommand { get; set; }
+        public RelayCommand ProgressStartCommand1 { get; set; }
+        public RelayCommand ProgressStartCommand2 { get; set; }
         public RelayCommand ProgressCancelCommand { get; set; }
 
         private string _OpenFileName;
@@ -131,35 +134,13 @@ namespace mvvm_light_sample.ViewModel
                 SaveFileName = filename;
         }
 
-        private void ProgressStart()
+        private void ProgressStart1()
         {
             MessageBoxResult res = MessageBoxResult.None;
 
-            var parameter = new ProgressParameter()
-                {
-                    IsIndeterminate = false,
-                    Max = 50,
-                    Message = "処理中です"
-                };
-
-            parameter.ProgressAction = (tokenSource) =>
-            {
-                for (int i = 0; i < 50; i++)
-                {
-                    parameter.Value++;  // 進捗++
-
-                    // キャンセルしたかどうか
-                    if (tokenSource.IsCancellationRequested)
-                        break;
-
-                    System.Threading.Thread.Sleep(100);
-                    Debug.WriteLine(i.ToString());
-                }
-            };
-
             Messenger.Default.Send<ProgressMessage>(new ProgressMessage()
             {
-                Parameter = parameter,
+                Parameter = ProgressModel.ProgressAction1(),
                 Callback = (result) =>
                 {
                     res = result;
@@ -175,6 +156,27 @@ namespace mvvm_light_sample.ViewModel
                 ShowMessageBox("完了しました");
         }
 
+        private void ProgressStart2()
+        {
+            MessageBoxResult res = MessageBoxResult.None;
+
+            Messenger.Default.Send<ProgressMessage>(new ProgressMessage()
+            {
+                Parameter = ProgressModel.ProgressAction2(),
+                Callback = (result) =>
+                {
+                    res = result;
+
+                    Debug.WriteLine(result.ToString());
+                }
+            });
+
+
+            if (res == MessageBoxResult.Cancel)
+                ShowMessageBox("キャンセルされました");
+            else
+                ShowMessageBox("完了しました");
+        }
 
         private MessageBoxResult ShowMessageBox(string text, string caption="", MessageBoxButton button = System.Windows.MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
