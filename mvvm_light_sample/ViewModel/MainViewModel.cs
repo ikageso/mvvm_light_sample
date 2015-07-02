@@ -133,16 +133,18 @@ namespace mvvm_light_sample.ViewModel
 
         private void ProgressStart()
         {
+            MessageBoxResult res = MessageBoxResult.None;
+
             var parameter = new ProgressParameter()
                 {
                     IsIndeterminate = false,
-                    Max = 100,
+                    Max = 50,
                     Message = "ˆ—’†‚Å‚·"
                 };
 
             parameter.ProgressAction = (tokenSource) =>
             {
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 50; i++)
                 {
                     parameter.Value++;  // i’»++
 
@@ -160,9 +162,17 @@ namespace mvvm_light_sample.ViewModel
                 Parameter = parameter,
                 Callback = (result) =>
                 {
+                    res = result;
+
                     Debug.WriteLine(result.ToString());
                 }
             });
+
+
+            if (res == MessageBoxResult.Cancel)
+                ShowMessageBox("ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½");
+            else
+                ShowMessageBox("Š®—¹‚µ‚Ü‚µ‚½");
         }
 
 
