@@ -9,11 +9,17 @@ namespace mvvm_light_sample.Model
 {
     public class ProgressParameter : INotifyPropertyChanged
     {
+        /// <summary>
+        /// ダイアログに表示するメッセージ
+        /// </summary>
         public string Message { get; set; }
+        /// <summary>
+        /// Max(完了値)
+        /// </summary>
         public int Max { get; set; }
         private int _Value;
         /// <summary>
-        /// Value
+        /// Value(進捗値)
         /// </summary>
         public int Value
         {
@@ -27,8 +33,13 @@ namespace mvvm_light_sample.Model
                 RaisePropertyChanged("Value");
             }
         }
-
+        /// <summary>
+        /// IsIndeterminate(進捗をループで表示するか、値で表示するか。)
+        /// </summary>
         public bool IsIndeterminate { get; set; }
+        /// <summary>
+        /// 処理のAction
+        /// </summary>
         public Action<CancellationTokenSource> ProgressAction { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void RaisePropertyChanged(string name)

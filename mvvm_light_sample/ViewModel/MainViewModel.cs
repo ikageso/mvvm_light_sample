@@ -144,7 +144,9 @@ namespace mvvm_light_sample.ViewModel
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    parameter.Value++;
+                    parameter.Value++;  // i’»++
+
+                    // ƒLƒƒƒ“ƒZƒ‹‚µ‚½‚©‚Ç‚¤‚©
                     if (tokenSource.IsCancellationRequested)
                         break;
 
@@ -174,7 +176,7 @@ namespace mvvm_light_sample.ViewModel
                 Text = text,
                 Caption = caption,
                 Button = button,
-                Icon = MessageBoxImage.Information,
+                Icon = icon,
                 Callback = (result) =>
                 {
                     Debug.WriteLine(result.ToString());
