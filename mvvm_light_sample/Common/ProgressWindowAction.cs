@@ -10,7 +10,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace mvvm_light_sample.Common
 {
-    // MessageBox を表示するアクション
+    // ProgressWindow を表示するアクション
     public class ProgressWindowAction : TriggerAction<DependencyObject>
     {
         protected override void Invoke(object parameter)

@@ -10,6 +10,11 @@ namespace mvvm_light_sample.Model
 {
     public class ProgressModel
     {
+        /// <summary>
+        /// プログレスバーを表示する処理
+        /// （進捗表示あり）
+        /// </summary>
+        /// <returns></returns>
         public static ProgressParameter ProgressAction1()
         {
             var parameter = new ProgressParameter()
@@ -21,22 +26,37 @@ namespace mvvm_light_sample.Model
 
             parameter.ProgressAction = (tokenSource) =>
             {
-                for (int i = 0; i < 50; i++)
+                try
                 {
-                    parameter.Value++;  // 進捗++
+                    for (int i = 0; i < 50; i++)
+                    {
+                        parameter.Value++;  // 進捗++
 
-                    // キャンセルしたかどうか
-                    if (tokenSource.IsCancellationRequested)
-                        break;
+                        //// キャンセルしたかどうか
+                        //if (tokenSource.IsCancellationRequested)
+                        //    break;
 
-                    System.Threading.Thread.Sleep(100);
-                    Debug.WriteLine(i.ToString());
+                        // キャンセルしたかどうかExceptionで判断
+                        tokenSource.Token.ThrowIfCancellationRequested();
+
+                        System.Threading.Thread.Sleep(100);
+                        Debug.WriteLine(i.ToString());
+                    }
+                }
+                catch (OperationCanceledException e)
+                {
+                    Debug.WriteLine(e.Message);
                 }
             };
 
             return parameter;
         }
 
+        /// <summary>
+        /// プログレスバーを表示する処理
+        /// （進捗表示なし）
+        /// </summary>
+        /// <returns></returns>
         public static ProgressParameter ProgressAction2()
         {
             var parameter = new ProgressParameter()

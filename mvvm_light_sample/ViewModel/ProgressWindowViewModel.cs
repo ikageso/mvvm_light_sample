@@ -32,7 +32,7 @@ namespace mvvm_light_sample.ViewModel
 
                 var token = _CancellationTokenSource.Token;
 
-                // 重い処理
+                // 処理実行
                 Task.Factory.StartNew(() =>
                 {
                     if (MyAction != null)
@@ -59,6 +59,9 @@ namespace mvvm_light_sample.ViewModel
 
         }
 
+        /// <summary>
+        /// Parameter
+        /// </summary>
         public ProgressParameter Parameter { get; set; }
 
         /// <summary>
