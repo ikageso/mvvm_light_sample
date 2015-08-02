@@ -1,9 +1,9 @@
 # mvvm_light_sample
 
-* Save File Dialog
 * Open File Dialog
+* Save File Dialog
 * MessageBox
-* ProgressDialog
+* ProgressWindow
 
 ![](https://github.com/ikageso/mvvm_light_sample/wiki/images/mainwindow.jpg)
 
