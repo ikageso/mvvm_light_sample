@@ -1,7 +1,13 @@
 # mvvm_light_sample
 
-メッセージボックスとプログレスバー
+* Save File Dialog
+* Open File Dialog
+* MessageBox
+* ProgressDialog
 
+![](https://github.com/ikageso/mvvm_light_sample/wiki/images/mainwindow.jpg)
+
+![](https://github.com/ikageso/mvvm_light_sample/wiki/images/progresswindow.jpg)
 
 
 ### Requirements
