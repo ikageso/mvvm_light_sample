@@ -1,5 +1,7 @@
 # mvvm_light_sample
 
+[![Build status](https://ci.appveyor.com/api/projects/status/8p63m33obhew1sle?svg=true)](https://ci.appveyor.com/project/ikageso/mvvm-light-sample)
+
 * Open File Dialog
 * Save File Dialog
 * MessageBox
