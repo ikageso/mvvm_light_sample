@@ -11,6 +11,8 @@
 
 ![](https://github.com/ikageso/mvvm_light_sample/wiki/images/progresswindow.jpg)
 
+![](https://github.com/ikageso/mvvm_light_sample/wiki/images/progresswindow2.JPG)
+
 
 ### Requirements
 * Visual Studio 2010
