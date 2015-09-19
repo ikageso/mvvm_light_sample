@@ -119,12 +119,20 @@
     <Compile Include="Common\SaveFileMessage.cs" />
     <Compile Include="Common\SaveFileTrigger.cs" />
     <Compile Include="Common\ProgressParameter.cs" />
+    <Compile Include="Common\ProgressStatusMessage.cs" />
+    <Compile Include="Common\Progress2Message.cs" />
+    <Compile Include="Common\Progress2MessageTrigger.cs" />
+    <Compile Include="Common\ProgressWindow2Action.cs" />
     <Compile Include="Model\ProgressModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ProgressWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\ProgressWindow2ViewModel.cs" />
     <Compile Include="View\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProgressWindow2.xaml.cs">
+      <DependentUpon>ProgressWindow2.xaml</DependentUpon>
     </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -141,6 +149,10 @@
     <Page Include="View\ProgressWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProgressWindow2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

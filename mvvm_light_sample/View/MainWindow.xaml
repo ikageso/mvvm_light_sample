@@ -18,6 +18,9 @@
         <cm:ProgressMessageTrigger>
             <cm:ProgressWindowAction/>
         </cm:ProgressMessageTrigger>
+        <cm:Progress2MessageTrigger>
+            <cm:ProgressWindow2Action/>
+        </cm:Progress2MessageTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
@@ -57,7 +60,11 @@
                     <Button Command="{Binding ProgressStartCommand2}" Content="処理開始" Name="button4" Margin="5,5,5,5" />
                 </Grid>
             </GroupBox>
-
+            <GroupBox Header="処理中ダイアログ(進捗表示２段あり)" Height="73" Name="groupBox5" Width="231">
+                <Grid>
+                    <Button Command="{Binding ProgressStartCommand3}" Content="処理開始" Margin="5,5,5,5" Name="button5" />
+                </Grid>
+            </GroupBox>
         </WrapPanel>
     </Grid>
 </Window>

@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Windows;
 using mvvm_light_sample.Common;
 using mvvm_light_sample.Model;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace mvvm_light_sample.ViewModel
 {
@@ -41,6 +43,7 @@ namespace mvvm_light_sample.ViewModel
             SaveFileCommand = new RelayCommand(SaveFile);
             ProgressStartCommand1 = new RelayCommand(ProgressStart1);
             ProgressStartCommand2 = new RelayCommand(ProgressStart2);
+            ProgressStartCommand3 = new RelayCommand(ProgressStart3);
         }
 
         #region プロパティ
@@ -49,6 +52,7 @@ namespace mvvm_light_sample.ViewModel
         public RelayCommand SaveFileCommand { get; set; }
         public RelayCommand ProgressStartCommand1 { get; set; }
         public RelayCommand ProgressStartCommand2 { get; set; }
+        public RelayCommand ProgressStartCommand3 { get; set; }
         public RelayCommand ProgressCancelCommand { get; set; }
 
         private string _OpenFileName;
@@ -176,6 +180,84 @@ namespace mvvm_light_sample.ViewModel
                 ShowMessageBox("キャンセルされました");
             else
                 ShowMessageBox("完了しました");
+        }
+
+        private void ProgressStart3()
+        {
+            var cancelTokenSource = new CancellationTokenSource();
+            Task task = Task.Factory.StartNew(() =>
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 100; j++)
+                    {
+                        if (cancelTokenSource.IsCancellationRequested)
+                        {
+                            Debug.WriteLine("キャンセルされました。");
+                            // ウィンドウクローズ
+                            Messenger.Default.Send<ProgressStatusMessage>(new ProgressStatusMessage()
+                            {
+                                Text = null,
+                                CloseWindow = true
+                            });
+
+                            return;
+                        }
+
+                        // 進捗表示
+                        Messenger.Default.Send<ProgressStatusMessage>(new ProgressStatusMessage()
+                        {
+                            ProgressValue1 = (double)(j + 1) * (double)(100 / 100),
+                            ProgressValue2 = (double)(i) * (double)(100 / 5),
+                        });
+
+                        Thread.Sleep(10);
+
+                    }
+
+                    double parsent = (double)(i + 1) * (double)(100 / 5);
+                    // 進捗表示
+                    Messenger.Default.Send<ProgressStatusMessage>(new ProgressStatusMessage()
+                    {
+                        Text = string.Format("バックグラウンド処理中...{0}%", parsent),
+                        ProgressValue2 = parsent,
+                    });
+                }
+                Debug.WriteLine("完了しました。");
+
+                // ウィンドウクローズ
+                Messenger.Default.Send<ProgressStatusMessage>(new ProgressStatusMessage()
+                {
+                    CloseWindow = true
+                });
+
+            });
+        
+
+            // ダイアログ表示
+            MessageBoxResult res = MessageBoxResult.None;
+            Messenger.Default.Send<Progress2Message>(new Progress2Message()
+            {
+                Text = "バックグラウンド処理中... ",
+                IsIndeterminate1 = false,
+                IsIndeterminate2 = false,
+                Callback = (result) =>
+                {
+                    res = result;
+
+                    Debug.WriteLine(result.ToString());
+                }
+            });
+
+            if (res == MessageBoxResult.Cancel)
+            {
+                cancelTokenSource.Cancel();
+                ShowMessageBox("キャンセルされました");
+            }
+            else
+            {
+                ShowMessageBox("完了しました");
+            }
         }
 
         private MessageBoxResult ShowMessageBox(string text, string caption="", MessageBoxButton button = System.Windows.MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
