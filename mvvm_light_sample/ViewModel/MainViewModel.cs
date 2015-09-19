@@ -252,12 +252,29 @@ namespace mvvm_light_sample.ViewModel
             if (res == MessageBoxResult.Cancel)
             {
                 cancelTokenSource.Cancel();
-                ShowMessageBox("キャンセルされました");
+            }
+
+            // Task終了待ち
+            bool bRes = task.Wait(3000);
+            string str = string.Empty;
+           
+            if (cancelTokenSource.IsCancellationRequested)
+            {
+                str = "キャンセルされました。";
             }
             else
             {
-                ShowMessageBox("完了しました");
+                str = "完了しました。";
             }
+
+            if (!bRes)
+            {
+                str += "\nタスク終了待ちでタイムアウトが発生しました。";
+            }
+
+            ShowMessageBox(str);
+
+
         }
 
         private MessageBoxResult ShowMessageBox(string text, string caption="", MessageBoxButton button = System.Windows.MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
