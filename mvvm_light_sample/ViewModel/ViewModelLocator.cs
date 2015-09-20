@@ -43,7 +43,6 @@ namespace mvvm_light_sample.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<ProgressWindow2ViewModel>();
         }
 
         public MainViewModel Main
@@ -53,15 +52,6 @@ namespace mvvm_light_sample.ViewModel
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-
-        public ProgressWindow2ViewModel ProgressWindow2
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<ProgressWindow2ViewModel>();
-            }
-        }
-
         
         public static void Cleanup()
         {

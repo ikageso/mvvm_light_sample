@@ -4,10 +4,11 @@ using GalaSoft.MvvmLight.Messaging;
 using mvvm_light_sample.Common;
 using System.Diagnostics;
 using System.Windows;
-using mvvm_light_sample.Common;
 using mvvm_light_sample.Model;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
+using GalaSoft.MvvmLight.Threading;
 
 namespace mvvm_light_sample.ViewModel
 {
@@ -44,6 +45,7 @@ namespace mvvm_light_sample.ViewModel
             ProgressStartCommand1 = new RelayCommand(ProgressStart1);
             ProgressStartCommand2 = new RelayCommand(ProgressStart2);
             ProgressStartCommand3 = new RelayCommand(ProgressStart3);
+            ProgressStartCommand4 = new RelayCommand(ProgressStart4);
         }
 
         #region プロパティ
@@ -53,6 +55,7 @@ namespace mvvm_light_sample.ViewModel
         public RelayCommand ProgressStartCommand1 { get; set; }
         public RelayCommand ProgressStartCommand2 { get; set; }
         public RelayCommand ProgressStartCommand3 { get; set; }
+        public RelayCommand ProgressStartCommand4 { get; set; }
         public RelayCommand ProgressCancelCommand { get; set; }
 
         private string _OpenFileName;
@@ -197,12 +200,13 @@ namespace mvvm_light_sample.ViewModel
                             // ウィンドウクローズ
                             Messenger.Default.Send<ProgressStatusMessage>(new ProgressStatusMessage()
                             {
-                                Text = null,
                                 CloseWindow = true
                             });
 
                             return;
                         }
+
+                        Thread.Sleep(10);// 何かの処理
 
                         // 進捗表示
                         Messenger.Default.Send<ProgressStatusMessage>(new ProgressStatusMessage()
@@ -210,9 +214,6 @@ namespace mvvm_light_sample.ViewModel
                             ProgressValue1 = (double)(j + 1) * (double)(100 / 100),
                             ProgressValue2 = (double)(i) * (double)(100 / 5),
                         });
-
-                        Thread.Sleep(10);
-
                     }
 
                     double parsent = (double)(i + 1) * (double)(100 / 5);
@@ -274,6 +275,84 @@ namespace mvvm_light_sample.ViewModel
 
             ShowMessageBox(str);
 
+
+        }
+
+        private void ProgressStart4()
+        {
+
+            Task task = Task.Factory.StartNew(() =>
+            {
+                var cancelTokenSource = new CancellationTokenSource();
+
+                var vm = new ProgressWindow3ViewModel()
+                {
+                    CancelTokenSource = cancelTokenSource,
+                    Text = "バックグラウンド処理中... ",
+                    IsIndeterminate1 = false,
+                    IsIndeterminate2 = false,
+                };
+
+                Task task2 = Task.Factory.StartNew(() =>
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        for (int j = 0; j < 100; j++)
+                        {
+                            if (cancelTokenSource.IsCancellationRequested)
+                            {
+                                Debug.WriteLine("キャンセルされました。");
+                                // ウィンドウクローズ
+                                vm.CloseWindow = true;
+
+                                return;
+                            }
+
+                            Thread.Sleep(10);// 何かの処理
+
+                            // 進捗表示
+                            vm.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
+                            vm.ProgressValue2 = (double)(i) * (double)(100 / 5);
+                        }
+
+                        double parsent = (double)(i + 1) * (double)(100 / 5);
+
+                        // 進捗表示
+                        vm.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
+                        vm.ProgressValue2 = parsent;
+                    }
+                    Debug.WriteLine("完了しました。");
+
+
+                    // ウィンドウクローズ
+                    vm.CloseWindow = true;
+                }, cancelTokenSource.Token).ContinueWith((t) =>
+                {
+                    string str = string.Empty;
+
+                    if (cancelTokenSource.IsCancellationRequested)
+                    {
+                        str = "キャンセルされました。";
+                    }
+                    else
+                    {
+                        str = "完了しました。";
+                    }
+                    DispatcherHelper.CheckBeginInvokeOnUI(
+                    () =>
+                    {
+                        ShowMessageBox(str, caption: "結果");
+                    });
+                });
+
+                DispatcherHelper.CheckBeginInvokeOnUI(
+                () =>
+                {
+                    // ダイアログ表示
+                    Messenger.Default.Send<Progress3Message>(new Progress3Message() { vm = vm });
+                });
+
+            });
 
         }
 

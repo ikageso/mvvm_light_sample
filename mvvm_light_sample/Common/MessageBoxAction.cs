@@ -22,9 +22,9 @@ namespace mvvm_light_sample.Common
                     msg.Text,
                     msg.Caption,
                     msg.Button,
-                    msg.Icon
-                    //MessageBoxResult.None,
-                    //MessageBoxOptions.DefaultDesktopOnly
+                    msg.Icon,
+                    MessageBoxResult.None,
+                    MessageBoxOptions.DefaultDesktopOnly
                     );
                 msg.Callback(result);
             }
