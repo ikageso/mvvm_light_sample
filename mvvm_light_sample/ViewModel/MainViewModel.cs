@@ -363,8 +363,9 @@ namespace mvvm_light_sample.ViewModel
         {
 
             var cancelTokenSource = new CancellationTokenSource();
+            ProgressWindow3ViewModel vm = null;
 
-            var vm = new ProgressWindow3ViewModel()
+            var param = new Progress3Parameter()
             {
                 CancelTokenSource = cancelTokenSource,
                 Text = "バックグラウンド処理中... ",
@@ -373,7 +374,7 @@ namespace mvvm_light_sample.ViewModel
             };
 
             // 処理中ウィンドウ表示
-            Messenger.Default.Send<Progress3Message>(new Progress3Message() { Vm = vm });
+            Messenger.Default.Send<Progress3Message>(new Progress3Message() { Parameter = param, Callback = (viewModel) => vm = viewModel as ProgressWindow3ViewModel });
 
             Task.Factory.StartNew(() =>
             {
@@ -390,14 +391,14 @@ namespace mvvm_light_sample.ViewModel
                         Thread.Sleep(10);// 何かの処理
 
                         // 進捗表示
-                        vm.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
-                        vm.ProgressValue2 = (double)(i) * (double)(100 / 5);
+                        param.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
+                        param.ProgressValue2 = (double)(i) * (double)(100 / 5);
                     }
 
                     // 進捗表示
                     double parsent = (double)(i + 1) * (double)(100 / 5);
-                    vm.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
-                    vm.ProgressValue2 = parsent;
+                    param.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
+                    param.ProgressValue2 = parsent;
                 }
                 Debug.WriteLine("完了しました。");
 
@@ -431,7 +432,7 @@ namespace mvvm_light_sample.ViewModel
                             Debug.WriteLine(result.ToString());
 
                             // 処理中ウィンドウクローズ
-                            vm.CloseWindow = true;
+                            param.CloseWindow = true;
                         }
                     });
                 });

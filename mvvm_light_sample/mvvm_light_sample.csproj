@@ -130,6 +130,7 @@
     <Compile Include="Common\MessageBox2Action.cs" />
     <Compile Include="Common\MessageBox2Message.cs" />
     <Compile Include="Common\MessageBox2Trigger.cs" />
+    <Compile Include="Common\Progress3Parameter.cs" />
     <Compile Include="Converter\ButtonToCollapsedConverter.cs" />
     <Compile Include="Converter\IconToImageConverter.cs" />
     <Compile Include="Converter\LineCountToMarginConverter.cs" />

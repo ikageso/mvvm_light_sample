@@ -5,7 +5,7 @@
         xmlns:cm="clr-namespace:mvvm_light_sample.Common"
         xmlns:gc="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
         Title="ProgressWindow3" Height="285" Width="448"
-        cm:CloseWindowAttachedBehavior.Close="{Binding CloseWindow}"
+        cm:CloseWindowAttachedBehavior.Close="{Binding Parameter.CloseWindow}"
         WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,9 +23,9 @@
             <RowDefinition Height="27*" />
             <RowDefinition Height="54*" />
         </Grid.RowDefinitions>
-        <ProgressBar Grid.Row="3" Grid.Column="1" Maximum="100" Value="{Binding ProgressValue1}" IsIndeterminate="{Binding IsIndeterminate1}"/>
+        <ProgressBar Grid.Row="3" Grid.Column="1" Maximum="100" Value="{Binding Parameter.ProgressValue1}" IsIndeterminate="{Binding Parameter.IsIndeterminate1}"/>
         <Button Content="Cancel" Grid.Column="1" HorizontalAlignment="Center" Height="38" Grid.Row="7" VerticalAlignment="Center"  Width="114" Command="{Binding CancelCommand}" Margin="137,4,150,12" />
-        <TextBlock Grid.Column="1" TextWrapping="Wrap" Grid.Row="1" FontSize="20" Text="{Binding Text}"/>
-        <ProgressBar Grid.Column="1" Grid.Row="5" Maximum="100" Value="{Binding ProgressValue2}" IsIndeterminate="{Binding IsIndeterminate2}" />
+        <TextBlock Grid.Column="1" TextWrapping="Wrap" Grid.Row="1" FontSize="20" Text="{Binding Parameter.Text}"/>
+        <ProgressBar Grid.Column="1" Grid.Row="5" Maximum="100" Value="{Binding Parameter.ProgressValue2}" IsIndeterminate="{Binding Parameter.IsIndeterminate2}" />
     </Grid>
 </Window>

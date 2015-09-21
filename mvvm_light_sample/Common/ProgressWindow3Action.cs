@@ -18,9 +18,12 @@ namespace mvvm_light_sample.Common
             var msg = parameter as Progress3Message;
             if (msg != null)
             {
-                var window = new ProgressWindow3() { DataContext = msg.Vm };
+                var vm = new ProgressWindow3ViewModel() { Parameter = msg.Parameter };
+                var window = new ProgressWindow3() { DataContext = vm };
 
                 window.Show();
+
+                msg.Callback(vm);
             }
         }
     }
