@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.ComponentModel;
-using mvvm_light_sample.Model;
 using System.Windows;
 using mvvm_light_sample.ViewModel;
 

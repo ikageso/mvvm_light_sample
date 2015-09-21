@@ -6,7 +6,7 @@
         xmlns:cm="clr-namespace:mvvm_light_sample.Common"
         xmlns:gc="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
         Title="ProgressWindow" Height="190" Width="448"
-        cm:CloseWindowAttachedBehavior.Close="{Binding CloseWindow}"
+        cm:CloseWindowAttachedBehavior.Close="{Binding Parameter.CloseWindow}"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" WindowStartupLocation="CenterOwner">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="ContentRendered">

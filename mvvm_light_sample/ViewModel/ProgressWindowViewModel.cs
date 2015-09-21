@@ -16,47 +16,29 @@ namespace mvvm_light_sample.ViewModel
 {
     public class ProgressWindowViewModel : ViewModelBase
     {
-        CancellationTokenSource _CancellationTokenSource = new CancellationTokenSource();
-
         public ProgressWindowViewModel()
         {
-            // キャンセルボタン押下時のコマンド登録
-            CancelCommand = new RelayCommand(() => 
-                {
-                    if (_CancellationTokenSource != null)
-                        _CancellationTokenSource.Cancel();
-                });
+        }
 
-            ContentRenderedCommand = new RelayCommand(() =>
+        private RelayCommand _CancelCommand = null;
+        /// <summary>
+        /// CancelCommand
+        /// </summary>
+        public RelayCommand CancelCommand
+        {
+            get
             {
-
-                var token = _CancellationTokenSource.Token;
-
-                // 処理実行
-                Task.Factory.StartNew(() =>
+                if (_CancelCommand == null)
                 {
-                    if (MyAction != null)
-                        MyAction(_CancellationTokenSource);
-
-
-                }, token).ContinueWith(t =>
-                {
-                    if (_CancellationTokenSource.IsCancellationRequested)
+                    _CancelCommand = new RelayCommand(() =>
                     {
-                        Debug.WriteLine("キャンセルされました。");
-                        Result = MessageBoxResult.Cancel;
+                        Parameter.Result = MessageBoxResult.Cancel;
+                        Parameter.CloseWindow = true;
+                    });
+                }
 
-                    }
-                    else
-                    {
-                        Debug.WriteLine("完了しました。");
-                        this.Result = MessageBoxResult.OK;
-                    }
-                    this.CloseWindow = true;
-                });
-
-            });
-
+                return _CancelCommand;
+            }
         }
 
         /// <summary>
@@ -64,51 +46,5 @@ namespace mvvm_light_sample.ViewModel
         /// </summary>
         public ProgressParameter Parameter { get; set; }
 
-        /// <summary>
-        /// IsVisibleChangedCommand
-        /// </summary>
-        public RelayCommand ContentRenderedCommand { get; private set; }
-
-        /// <summary>
-        /// CancelCommand
-        /// </summary>
-        public RelayCommand CancelCommand { get; private set; }
-
-        /// <summary>
-        /// MyAction
-        /// </summary>
-        public Action<CancellationTokenSource> MyAction
-        {
-            get
-            {
-                return Parameter.ProgressAction;
-            }
-            set
-            {
-                Parameter.ProgressAction = value;
-            }
-        }
-
-        /// <summary>
-        /// Result
-        /// </summary>
-        public MessageBoxResult Result { get; set; }
-
-        private bool _CloseWindow;
-        /// <summary>
-        /// CloseWindow
-        /// </summary>
-        public bool CloseWindow
-        {
-            get
-            {
-                return _CloseWindow;
-            }
-            set
-            {
-                _CloseWindow = value;
-                RaisePropertyChanged("CloseWindow");
-            }
-        }
     }
 }

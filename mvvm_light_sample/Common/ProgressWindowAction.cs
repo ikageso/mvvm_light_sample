@@ -22,8 +22,6 @@ namespace mvvm_light_sample.Common
                 var window = new ProgressWindow() { DataContext = vm };
 
                 window.ShowDialog();
-
-                msg.Callback(vm.Result);
             }
         }
     }

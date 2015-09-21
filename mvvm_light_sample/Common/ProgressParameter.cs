@@ -4,19 +4,58 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Threading;
+using GalaSoft.MvvmLight;
+using System.Windows;
 
 namespace mvvm_light_sample.Common
 {
     public class ProgressParameter : INotifyPropertyChanged
     {
+        public ProgressParameter()
+        {
+            Result = MessageBoxResult.None;
+        }
+
         /// <summary>
-        /// ダイアログに表示するメッセージ
+        /// Result
         /// </summary>
-        public string Message { get; set; }
+        public MessageBoxResult Result { get; set; }
+
+        private string _Message;
         /// <summary>
-        /// Max(完了値)
+        /// Message
         /// </summary>
-        public int Max { get; set; }
+        public string Message
+        {
+            get
+            {
+                return _Message;
+            }
+            set
+            {
+                _Message = value;
+                RaisePropertyChanged("Message");
+            }
+        }
+
+        private int _Max;
+        /// <summary>
+        /// Max
+        /// </summary>
+        public int Max
+        {
+            get
+            {
+                return _Max;
+            }
+            set
+            {
+                _Max = value;
+                RaisePropertyChanged("Max");
+            }
+        }
+
+
         private int _Value;
         /// <summary>
         /// Value(進捗値)
@@ -33,14 +72,41 @@ namespace mvvm_light_sample.Common
                 RaisePropertyChanged("Value");
             }
         }
+
+        private bool _IsIndeterminate;
         /// <summary>
-        /// IsIndeterminate(進捗をループで表示するか、値で表示するか。)
+        /// IsIndeterminate
         /// </summary>
-        public bool IsIndeterminate { get; set; }
+        public bool IsIndeterminate
+        {
+            get
+            {
+                return _IsIndeterminate;
+            }
+            set
+            {
+                _IsIndeterminate = value;
+                RaisePropertyChanged("IsIndeterminate");
+            }
+        }
+
+        private bool _CloseWindow;
         /// <summary>
-        /// 処理のAction
+        /// CloseWindow
         /// </summary>
-        public Action<CancellationTokenSource> ProgressAction { get; set; }
+        public bool CloseWindow
+        {
+            get
+            {
+                return _CloseWindow;
+            }
+            set
+            {
+                _CloseWindow = value;
+                RaisePropertyChanged("CloseWindow");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void RaisePropertyChanged(string name)
         {

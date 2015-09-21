@@ -4,7 +4,6 @@ using GalaSoft.MvvmLight.Messaging;
 using mvvm_light_sample.Common;
 using System.Diagnostics;
 using System.Windows;
-using mvvm_light_sample.Model;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
@@ -143,46 +142,122 @@ namespace mvvm_light_sample.ViewModel
 
         private void ProgressStart1()
         {
-            MessageBoxResult res = MessageBoxResult.None;
+            var cancelTokenSource = new CancellationTokenSource();
+
+            var parameter = new ProgressParameter()
+            {
+                IsIndeterminate = false,
+                Max = 50,
+                Message = "処理中です"
+            };
+
+            var task = Task.Factory.StartNew(() =>
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    parameter.Value++;  // 進捗++
+
+                    // キャンセルしたかどうか
+                    if (cancelTokenSource.IsCancellationRequested)
+                        break;
+
+                    System.Threading.Thread.Sleep(100);
+                    Debug.WriteLine(i.ToString());
+                }
+
+                // ダイアログクローズ
+                parameter.CloseWindow = true;
+
+            });
 
             Messenger.Default.Send<ProgressMessage>(new ProgressMessage()
             {
-                Parameter = ProgressModel.ProgressAction1(),
-                Callback = (result) =>
-                {
-                    res = result;
-
-                    Debug.WriteLine(result.ToString());
-                }
+                Parameter = parameter,
             });
 
+            if (parameter.Result == MessageBoxResult.Cancel)
+            {
+                cancelTokenSource.Cancel();
+            }
 
-            if (res == MessageBoxResult.Cancel)
-                ShowMessageBox("キャンセルされました");
+            // Task終了待ち
+            bool bRes = task.Wait(3000);
+            string str = string.Empty;
+
+            if (cancelTokenSource.IsCancellationRequested)
+            {
+                str = "キャンセルされました。";
+            }
             else
-                ShowMessageBox("完了しました");
+            {
+                str = "完了しました。";
+            }
+
+            if (!bRes)
+            {
+                str += "\nタスク終了待ちでタイムアウトが発生しました。";
+            }
+
+            ShowMessageBox(str);
         }
 
         private void ProgressStart2()
         {
-            MessageBoxResult res = MessageBoxResult.None;
+            var cancelTokenSource = new CancellationTokenSource();
 
-            Messenger.Default.Send<ProgressMessage>(new ProgressMessage()
+            var parameter = new ProgressParameter()
             {
-                Parameter = ProgressModel.ProgressAction2(),
-                Callback = (result) =>
-                {
-                    res = result;
+                IsIndeterminate = true,
+                Message = "処理中です"
+            };
 
-                    Debug.WriteLine(result.ToString());
+            var task = Task.Factory.StartNew(() =>
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    // キャンセルしたかどうか
+                    if (cancelTokenSource.IsCancellationRequested)
+                        break;
+
+                    System.Threading.Thread.Sleep(100);
+                    Debug.WriteLine(i.ToString());
                 }
+
+                // ダイアログクローズ
+                parameter.CloseWindow = true;
+
             });
 
 
-            if (res == MessageBoxResult.Cancel)
-                ShowMessageBox("キャンセルされました");
+            Messenger.Default.Send<ProgressMessage>(new ProgressMessage()
+            {
+                Parameter = parameter,
+            });
+
+            if (parameter.Result == MessageBoxResult.Cancel)
+            {
+                cancelTokenSource.Cancel();
+            }
+
+            // Task終了待ち
+            bool bRes = task.Wait(3000);
+            string str = string.Empty;
+
+            if (cancelTokenSource.IsCancellationRequested)
+            {
+                str = "キャンセルされました。";
+            }
             else
-                ShowMessageBox("完了しました");
+            {
+                str = "完了しました。";
+            }
+
+            if (!bRes)
+            {
+                str += "\nタスク終了待ちでタイムアウトが発生しました。";
+            }
+
+            ShowMessageBox(str);
         }
 
         /// <summary>

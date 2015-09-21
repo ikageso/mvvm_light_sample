@@ -133,7 +133,6 @@
     <Compile Include="Converter\ButtonToCollapsedConverter.cs" />
     <Compile Include="Converter\IconToImageConverter.cs" />
     <Compile Include="Converter\LineCountToMarginConverter.cs" />
-    <Compile Include="Model\ProgressModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessageWindowViewModel.cs" />
     <Compile Include="ViewModel\ProgressWindowViewModel.cs" />
