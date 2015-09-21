@@ -9,6 +9,9 @@
         <cm:MessageBoxTrigger>
             <cm:MessageBoxAction/>
         </cm:MessageBoxTrigger>
+        <cm:MessageBox2Trigger>
+            <cm:MessageBox2Action/>
+        </cm:MessageBox2Trigger>
         <cm:OpenFileTrigger>
             <cm:OpenFileAction/>
         </cm:OpenFileTrigger>

@@ -33,7 +33,6 @@ namespace mvvm_light_sample.ViewModel
                     _CancelCommand = new RelayCommand(() =>
                     {
                         this.CancelTokenSource.Cancel();
-                        this.CloseWindow = true;
                     });
                 }
 

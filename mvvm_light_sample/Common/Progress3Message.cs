@@ -12,6 +12,6 @@ namespace mvvm_light_sample.Common
 {
     public class Progress3Message
     {
-        public ProgressWindow3ViewModel vm { get; set; }
+        public ProgressWindow3ViewModel Vm { get; set; }
     }
 }

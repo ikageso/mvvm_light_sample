@@ -185,6 +185,9 @@ namespace mvvm_light_sample.ViewModel
                 ShowMessageBox("完了しました");
         }
 
+        /// <summary>
+        /// ２段
+        /// </summary>
         private void ProgressStart3()
         {
             var cancelTokenSource = new CancellationTokenSource();
@@ -278,80 +281,87 @@ namespace mvvm_light_sample.ViewModel
 
         }
 
+        /// <summary>
+        /// 非同期ウィンドウ
+        /// </summary>
         private void ProgressStart4()
         {
 
-            Task task = Task.Factory.StartNew(() =>
+            var cancelTokenSource = new CancellationTokenSource();
+
+            var vm = new ProgressWindow3ViewModel()
             {
-                var cancelTokenSource = new CancellationTokenSource();
+                CancelTokenSource = cancelTokenSource,
+                Text = "バックグラウンド処理中... ",
+                IsIndeterminate1 = false,
+                IsIndeterminate2 = false,
+            };
 
-                var vm = new ProgressWindow3ViewModel()
+            Task.Factory.StartNew(() =>
+            {
+                for (int i = 0; i < 5; i++)
                 {
-                    CancelTokenSource = cancelTokenSource,
-                    Text = "バックグラウンド処理中... ",
-                    IsIndeterminate1 = false,
-                    IsIndeterminate2 = false,
-                };
-
-                Task task2 = Task.Factory.StartNew(() =>
-                {
-                    for (int i = 0; i < 5; i++)
+                    for (int j = 0; j < 100; j++)
                     {
-                        for (int j = 0; j < 100; j++)
+                        if (cancelTokenSource.IsCancellationRequested)
                         {
-                            if (cancelTokenSource.IsCancellationRequested)
-                            {
-                                Debug.WriteLine("キャンセルされました。");
-                                // ウィンドウクローズ
-                                vm.CloseWindow = true;
-
-                                return;
-                            }
-
-                            Thread.Sleep(10);// 何かの処理
-
-                            // 進捗表示
-                            vm.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
-                            vm.ProgressValue2 = (double)(i) * (double)(100 / 5);
+                            Debug.WriteLine("キャンセルされました。");
+                            return;
                         }
 
-                        double parsent = (double)(i + 1) * (double)(100 / 5);
+                        Thread.Sleep(10);// 何かの処理
 
                         // 進捗表示
-                        vm.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
-                        vm.ProgressValue2 = parsent;
+                        vm.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
+                        vm.ProgressValue2 = (double)(i) * (double)(100 / 5);
                     }
-                    Debug.WriteLine("完了しました。");
+
+                    double parsent = (double)(i + 1) * (double)(100 / 5);
+
+                    // 進捗表示
+                    vm.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
+                    vm.ProgressValue2 = parsent;
+                }
+                Debug.WriteLine("完了しました。");
 
 
-                    // ウィンドウクローズ
-                    vm.CloseWindow = true;
-                }, cancelTokenSource.Token).ContinueWith((t) =>
+            }, cancelTokenSource.Token).ContinueWith((t) =>
+            {
+                string str = string.Empty;
+
+                if (cancelTokenSource.IsCancellationRequested)
                 {
-                    string str = string.Empty;
-
-                    if (cancelTokenSource.IsCancellationRequested)
-                    {
-                        str = "キャンセルされました。";
-                    }
-                    else
-                    {
-                        str = "完了しました。";
-                    }
-                    DispatcherHelper.CheckBeginInvokeOnUI(
-                    () =>
-                    {
-                        ShowMessageBox(str, caption: "結果");
-                    });
-                });
+                    str = "キャンセルされました。";
+                }
+                else
+                {
+                    str = "完了しました。";
+                }
 
                 DispatcherHelper.CheckBeginInvokeOnUI(
                 () =>
                 {
-                    // ダイアログ表示
-                    Messenger.Default.Send<Progress3Message>(new Progress3Message() { vm = vm });
+                    Messenger.Default.Send<MessageBox2Message>(new MessageBox2Message()
+                    {
+                        Text = str,
+                        Caption = "",
+                        Button = System.Windows.MessageBoxButton.OK,
+                        Icon = MessageBoxImage.Information,
+                        Callback = (result) =>
+                        {
+                            Debug.WriteLine(result.ToString());
+                            // ウィンドウクローズ
+                            vm.CloseWindow = true;
+                        }
+                    });
                 });
+            });
 
+            // 処理中ウィンドウ表示
+            DispatcherHelper.CheckBeginInvokeOnUI(
+            () =>
+            {
+                Messenger.Default.Send<Progress3Message>(new Progress3Message() { Vm = vm });
             });
 
         }
