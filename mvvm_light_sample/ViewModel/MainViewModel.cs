@@ -297,6 +297,9 @@ namespace mvvm_light_sample.ViewModel
                 IsIndeterminate2 = false,
             };
 
+            // 処理中ウィンドウ表示
+            Messenger.Default.Send<Progress3Message>(new Progress3Message() { Vm = vm });
+
             Task.Factory.StartNew(() =>
             {
                 for (int i = 0; i < 5; i++)
@@ -316,9 +319,8 @@ namespace mvvm_light_sample.ViewModel
                         vm.ProgressValue2 = (double)(i) * (double)(100 / 5);
                     }
 
-                    double parsent = (double)(i + 1) * (double)(100 / 5);
-
                     // 進捗表示
+                    double parsent = (double)(i + 1) * (double)(100 / 5);
                     vm.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
                     vm.ProgressValue2 = parsent;
                 }
@@ -338,11 +340,13 @@ namespace mvvm_light_sample.ViewModel
                     str = "完了しました。";
                 }
 
+                // 完了メッセージ表示
                 DispatcherHelper.CheckBeginInvokeOnUI(
                 () =>
                 {
                     Messenger.Default.Send<MessageBox2Message>(new MessageBox2Message()
                     {
+                        SenderVM = vm,
                         Text = str,
                         Caption = "",
                         Button = System.Windows.MessageBoxButton.OK,
@@ -350,19 +354,14 @@ namespace mvvm_light_sample.ViewModel
                         Callback = (result) =>
                         {
                             Debug.WriteLine(result.ToString());
-                            // ウィンドウクローズ
+
+                            // 処理中ウィンドウクローズ
                             vm.CloseWindow = true;
                         }
                     });
                 });
             });
 
-            // 処理中ウィンドウ表示
-            DispatcherHelper.CheckBeginInvokeOnUI(
-            () =>
-            {
-                Messenger.Default.Send<Progress3Message>(new Progress3Message() { Vm = vm });
-            });
 
         }
 

@@ -13,5 +13,6 @@ namespace mvvm_light_sample.Common
         public Action<object> Callback { get; set; }
         public MessageBoxButton Button { get; set; }
         public MessageBoxImage Icon { get; set; }
+        public object SenderVM { get; set; }
     }
 }

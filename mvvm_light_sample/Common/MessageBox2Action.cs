@@ -6,6 +6,7 @@ using System.Windows.Interactivity;
 using System.Windows;
 using mvvm_light_sample.ViewModel;
 using mvvm_light_sample.View;
+using GalaSoft.MvvmLight;
 
 namespace mvvm_light_sample.Common
 {
@@ -27,7 +28,13 @@ namespace mvvm_light_sample.Common
                         Icon = msg.Icon
                     };
 
-                    var window = new MessageWindow() { DataContext = vm };
+                    Window owner = null;
+
+                    var windowList = Application.Current.Windows.Cast<Window>();
+                    if(windowList != null)
+                        owner = windowList.Where(x => x.DataContext == msg.SenderVM).FirstOrDefault();
+
+                    var window = new MessageWindow() { DataContext = vm, Owner = owner };
                     window.Closed += new EventHandler((s, e) => msg.Callback(vm.Result));
 
                     window.Show();

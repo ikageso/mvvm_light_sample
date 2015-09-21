@@ -10,7 +10,7 @@
         SizeToContent="WidthAndHeight"
         xmlns:cm="clr-namespace:mvvm_light_sample.Common"
         cm:CloseWindowAttachedBehavior.Close="{Binding CloseWindow}"
-        Title="{Binding Caption}" d:DesignHeight="300" d:DesignWidth="600" Height="Auto" Width="Auto" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="{x:Null}" Topmost="True" WindowStyle="SingleBorderWindow">
+        Title="{Binding Caption}" d:DesignHeight="300" d:DesignWidth="600" Height="Auto" Width="Auto" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="{x:Null}" WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
         <conv:ButtonToCollapsedConverter x:Key="ButtonToCollapsedConv" />
