@@ -44,5 +44,33 @@ namespace mvvm_light_sample.ViewModel
         /// Parameter
         /// </summary>
         public Progress3Parameter Parameter { get; set; }
+
+        private RelayCommand<System.ComponentModel.CancelEventArgs> _WindowClosingCommand;
+        /// <summary>
+        /// WindowClosingCommand
+        /// </summary>
+        public RelayCommand<System.ComponentModel.CancelEventArgs> WindowClosingCommand
+        {
+            get
+            {
+                if (_WindowClosingCommand == null)
+                {
+                    _WindowClosingCommand = new RelayCommand<CancelEventArgs>((e) =>
+                    {
+                        try
+                        {
+                            if (!Parameter.CancelTokenSource.Token.IsCancellationRequested)
+                            {
+                                Parameter.CancelTokenSource.Cancel();
+                                e.Cancel = true;
+                            }
+                        }
+                        catch { }
+                    });
+                }
+
+                return _WindowClosingCommand;
+            }
+        }
     }
 }

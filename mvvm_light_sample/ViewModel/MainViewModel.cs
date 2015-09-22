@@ -374,33 +374,41 @@ namespace mvvm_light_sample.ViewModel
             };
 
             // 処理中ウィンドウ表示
-            Messenger.Default.Send<Progress3Message>(new Progress3Message() { Parameter = param, Callback = (viewModel) => vm = viewModel as ProgressWindow3ViewModel });
+            Messenger.Default.Send<Progress3Message>(new Progress3Message()
+            {
+                Parameter = param,
+                Callback = (viewModel) => vm = viewModel as ProgressWindow3ViewModel
+            });
 
             Task.Factory.StartNew(() =>
             {
-                for (int i = 0; i < 5; i++)
+                try
                 {
-                    for (int j = 0; j < 100; j++)
+                    for (int i = 0; i < 5; i++)
                     {
-                        if (cancelTokenSource.IsCancellationRequested)
+                        for (int j = 0; j < 100; j++)
                         {
-                            Debug.WriteLine("キャンセルされました。");
-                            return;
+                            if (cancelTokenSource.IsCancellationRequested)
+                            {
+                                Debug.WriteLine("キャンセルされました。");
+                                return;
+                            }
+
+                            Thread.Sleep(10);// 何かの処理
+
+                            // 進捗表示
+                            param.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
+                            param.ProgressValue2 = (double)(i) * (double)(100 / 5);
                         }
 
-                        Thread.Sleep(10);// 何かの処理
-
                         // 進捗表示
-                        param.ProgressValue1 = (double)(j + 1) * (double)(100 / 100);
-                        param.ProgressValue2 = (double)(i) * (double)(100 / 5);
+                        double parsent = (double)(i + 1) * (double)(100 / 5);
+                        param.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
+                        param.ProgressValue2 = parsent;
                     }
-
-                    // 進捗表示
-                    double parsent = (double)(i + 1) * (double)(100 / 5);
-                    param.Text = string.Format("バックグラウンド処理中...{0}%", parsent);
-                    param.ProgressValue2 = parsent;
+                    Debug.WriteLine("完了しました。");
                 }
-                Debug.WriteLine("完了しました。");
+                catch { }
 
 
             }, cancelTokenSource.Token).ContinueWith((t) =>
@@ -433,9 +441,15 @@ namespace mvvm_light_sample.ViewModel
 
                             // 処理中ウィンドウクローズ
                             param.CloseWindow = true;
+
+                            cancelTokenSource.Dispose();
+                            cancelTokenSource = null;
+
                         }
                     });
                 });
+
+
             });
 
 

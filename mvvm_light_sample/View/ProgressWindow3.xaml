@@ -7,6 +7,11 @@
         Title="ProgressWindow3" Height="285" Width="448"
         cm:CloseWindowAttachedBehavior.Close="{Binding Parameter.CloseWindow}"
         WindowStartupLocation="CenterOwner">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <gc:EventToCommand Command="{Binding WindowClosingCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="12*"/>

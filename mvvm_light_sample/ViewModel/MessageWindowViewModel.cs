@@ -52,11 +52,6 @@ namespace mvvm_light_sample.ViewModel
         public RelayCommand<string> ButtonCommand { get; private set; }
 
         /// <summary>
-        /// WindowClosingCommand
-        /// </summary>
-        public RelayCommand<System.ComponentModel.CancelEventArgs> WindowClosingCommand { get; private set; }
-
-        /// <summary>
         /// Result
         /// </summary>
         public MessageBoxResult Result { get; set; }
