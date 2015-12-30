@@ -45,6 +45,8 @@ namespace mvvm_light_sample.ViewModel
             ProgressStartCommand2 = new RelayCommand(ProgressStart2);
             ProgressStartCommand3 = new RelayCommand(ProgressStart3);
             ProgressStartCommand4 = new RelayCommand(ProgressStart4);
+            ProgressStartCommand5 = new RelayCommand(ProgressStart5);
+            ProgressCancelCommand5 = new RelayCommand(ProgressCancel5);
         }
 
         #region プロパティ
@@ -55,7 +57,8 @@ namespace mvvm_light_sample.ViewModel
         public RelayCommand ProgressStartCommand2 { get; set; }
         public RelayCommand ProgressStartCommand3 { get; set; }
         public RelayCommand ProgressStartCommand4 { get; set; }
-        public RelayCommand ProgressCancelCommand { get; set; }
+        public RelayCommand ProgressStartCommand5 { get; set; }
+        public RelayCommand ProgressCancelCommand5 { get; set; }
 
         private string _OpenFileName;
         /// <summary>
@@ -356,6 +359,120 @@ namespace mvvm_light_sample.ViewModel
 
         }
 
+        private CancellationTokenSource _CancelTokenSource5 = null;
+        /// <summary>
+        /// ２段（非同期）
+        /// </summary>
+        private void ProgressStart5()
+        {
+            _CancelTokenSource5 = new CancellationTokenSource();
+            ViewModelBase vm = null;
+            MessageBoxResult res = MessageBoxResult.None;
+
+            Task task = Task.Factory.StartNew(() =>
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 100; j++)
+                    {
+                        if (_CancelTokenSource5.IsCancellationRequested)
+                        {
+                            Debug.WriteLine("キャンセルされました。");
+                            return;
+                        }
+
+                        Thread.Sleep(10);// 何かの処理
+
+                        // 進捗表示
+                        Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
+                        {
+                            ProgressValue1 = (double)(j + 1) * (double)(100 / 100),
+                            ProgressValue2 = (double)(i) * (double)(100 / 5),
+                        });
+                    }
+
+                    double parsent = (double)(i + 1) * (double)(100 / 5);
+                    // 進捗表示
+                    Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
+                    {
+                        Text = string.Format("バックグラウンド処理中...{0}%", parsent),
+                        ProgressValue2 = parsent,
+                    });
+                }
+                Debug.WriteLine("完了しました。");
+
+            }, _CancelTokenSource5.Token).ContinueWith((t) =>
+            {
+                string str = string.Empty;
+
+                if (_CancelTokenSource5.IsCancellationRequested)
+                {
+                    str = "キャンセルされました。";
+                }
+                else
+                {
+                    str = "完了しました。";
+                }
+
+                // 完了メッセージ表示
+                DispatcherHelper.CheckBeginInvokeOnUI(
+                () =>
+                {
+                    Messenger.Default.Send<MessageBox2Message>(new MessageBox2Message()
+                    {
+                        SenderVM = vm,
+                        Text = str,
+                        Caption = "",
+                        Button = System.Windows.MessageBoxButton.OK,
+                        Icon = MessageBoxImage.Information,
+                        Callback = (result) =>
+                        {
+                            Debug.WriteLine(result.ToString());
+
+                            _CancelTokenSource5.Dispose();
+                            _CancelTokenSource5 = null;
+
+                            // 処理中ウィンドウクローズ
+                            Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
+                            {
+                                CloseWindow = true
+                            });
+                        }
+                    });
+                });
+
+
+            });
+            
+            // 処理中ウィンドウ表示
+            Messenger.Default.Send<Progress4Message>(new Progress4Message()
+            {
+                CancelTokenSource = _CancelTokenSource5,
+                IsAsync = true,
+                Text = "バックグラウンド処理中... ",
+                IsIndeterminate1 = false,
+                IsIndeterminate2 = false,
+                Callback = (viewModel) =>
+                {
+                    vm = viewModel as ViewModelBase;
+                    //if (result == MessageBoxResult.Cancel)
+                    //{
+                    //    _CancelTokenSource5.Cancel();
+                    //}
+                },
+            });
+
+        }
+
+        /// <summary>
+        /// ２段（非同期）のキャンセル
+        /// </summary>
+        private void ProgressCancel5()
+        {
+            _CancelTokenSource5.Cancel();
+        }
+
+
         /// <summary>
         /// 非同期ウィンドウ
         /// </summary>
@@ -439,11 +556,11 @@ namespace mvvm_light_sample.ViewModel
                         {
                             Debug.WriteLine(result.ToString());
 
-                            // 処理中ウィンドウクローズ
-                            param.CloseWindow = true;
-
                             cancelTokenSource.Dispose();
                             cancelTokenSource = null;
+
+                            // 処理中ウィンドウクローズ
+                            param.CloseWindow = true;
 
                         }
                     });

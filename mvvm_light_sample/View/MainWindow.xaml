@@ -27,6 +27,9 @@
         <cm:Progress3MessageTrigger>
             <cm:ProgressWindow3Action/>
         </cm:Progress3MessageTrigger>
+        <cm:Progress4MessageTrigger>
+            <cm:ProgressWindow4Action/>
+        </cm:Progress4MessageTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
@@ -74,6 +77,16 @@
             <GroupBox Header="処理中ダイアログ(非同期)" Height="73" Name="groupBox6" Width="149">
                 <Grid>
                     <Button Command="{Binding ProgressStartCommand4}" Content="処理開始" Margin="5,5,5,5" Name="button7" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="処理中ダイアログ(非同期,進捗表示２段)" Height="73" Width="250">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding ProgressStartCommand5}" Content="処理開始"  Margin="5,5,5,5"/>
+                    <Button Command="{Binding ProgressCancelCommand5}" Content="キャンセル" Grid.Column="1"  Margin="5,5,5,5"/>
                 </Grid>
             </GroupBox>
         </WrapPanel>

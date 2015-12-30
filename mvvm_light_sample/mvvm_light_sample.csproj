@@ -131,6 +131,10 @@
     <Compile Include="Common\MessageBox2Message.cs" />
     <Compile Include="Common\MessageBox2Trigger.cs" />
     <Compile Include="Common\Progress3Parameter.cs" />
+    <Compile Include="Common\Progress4Message.cs" />
+    <Compile Include="Common\Progress4MessageTrigger.cs" />
+    <Compile Include="Common\ProgressWindow4Action.cs" />
+    <Compile Include="Common\ProgressStatusMessage4.cs" />
     <Compile Include="Converter\ButtonToCollapsedConverter.cs" />
     <Compile Include="Converter\IconToImageConverter.cs" />
     <Compile Include="Converter\LineCountToMarginConverter.cs" />
@@ -140,6 +144,7 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\ProgressWindow2ViewModel.cs" />
     <Compile Include="ViewModel\ProgressWindow3ViewModel.cs" />
+    <Compile Include="ViewModel\ProgressWindow4ViewModel.cs" />
     <Compile Include="View\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
@@ -151,6 +156,9 @@
     </Compile>
     <Compile Include="View\ProgressWindow3.xaml.cs">
       <DependentUpon>ProgressWindow3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProgressWindow4.xaml.cs">
+      <DependentUpon>ProgressWindow4.xaml</DependentUpon>
     </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -177,6 +185,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ProgressWindow3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProgressWindow4.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
