@@ -394,6 +394,7 @@ namespace mvvm_light_sample.ViewModel
             {
                 for (int i = 0; i < 5; i++)
                 {
+                    double persent1 = 0;
                     for (int j = 0; j < 100; j++)
                     {
                         if (progressTask.CancelToken.IsCancellationRequested)
@@ -404,12 +405,14 @@ namespace mvvm_light_sample.ViewModel
 
                         Thread.Sleep(10);// 何かの処理
 
+                        persent1 = (double)(j + 1) * (double)(100 / 100);
+
                         // 進捗表示
                         Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
                         {
                             VM = vm,
-                            ProgressValue1 = (double)(j + 1) * (double)(100 / 100),
-                            ProgressValue2 = (double)(i) * (double)(100 / 5),
+                            ProgressValue1 = progressTask.ProgressValue1 = persent1,
+                            ProgressValue2 = progressTask.ProgressValue2 = (double)(i) * (double)(100 / 5),
                         });
                     }
 
@@ -419,7 +422,8 @@ namespace mvvm_light_sample.ViewModel
                     {
                         VM = vm,
                         Text = string.Format("バックグラウンド処理中...{0}%", parsent),
-                        ProgressValue2 = parsent,
+                        ProgressValue1 = persent1,
+                        ProgressValue2 = progressTask.ProgressValue2 = parsent,
                     });
                 }
                 Debug.WriteLine("完了しました。");
@@ -442,6 +446,8 @@ namespace mvvm_light_sample.ViewModel
                 DispatcherHelper.CheckBeginInvokeOnUI(
                 () =>
                 {
+                    progressTask.Result = str;
+
                     Messenger.Default.Send<MessageBox2Message>(new MessageBox2Message()
                     {
                         SenderVM = vm,
