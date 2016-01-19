@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using GalaSoft.MvvmLight.Threading;
+using System.Collections.ObjectModel;
 
 namespace mvvm_light_sample.ViewModel
 {
@@ -46,7 +47,7 @@ namespace mvvm_light_sample.ViewModel
             ProgressStartCommand3 = new RelayCommand(ProgressStart3);
             ProgressStartCommand4 = new RelayCommand(ProgressStart4);
             ProgressStartCommand5 = new RelayCommand(ProgressStart5);
-            ProgressCancelCommand5 = new RelayCommand(ProgressCancel5);
+            ProgressCancelCommand5 = new RelayCommand<object>(ProgressCancel5);
         }
 
         #region プロパティ
@@ -58,7 +59,7 @@ namespace mvvm_light_sample.ViewModel
         public RelayCommand ProgressStartCommand3 { get; set; }
         public RelayCommand ProgressStartCommand4 { get; set; }
         public RelayCommand ProgressStartCommand5 { get; set; }
-        public RelayCommand ProgressCancelCommand5 { get; set; }
+        public RelayCommand<object> ProgressCancelCommand5 { get; set; }
 
         private string _OpenFileName;
         /// <summary>
@@ -359,15 +360,35 @@ namespace mvvm_light_sample.ViewModel
 
         }
 
-        private CancellationTokenSource _CancelTokenSource5 = null;
+        private ObservableCollection<ProgressTask> _TaskList = new ObservableCollection<ProgressTask>();
+        /// <summary>
+        /// TaskList
+        /// </summary>
+        public ObservableCollection<ProgressTask> TaskList
+        {
+            get
+            {
+                return _TaskList;
+            }
+            set
+            {
+                _TaskList = value;
+                RaisePropertyChanged("TaskList");
+            }
+        }
+
+
         /// <summary>
         /// ２段（非同期）
         /// </summary>
         private void ProgressStart5()
         {
-            _CancelTokenSource5 = new CancellationTokenSource();
+            var progressTask = new ProgressTask()
+            {
+                CancelToken = new CancellationTokenSource(),
+            };
+
             ViewModelBase vm = null;
-            MessageBoxResult res = MessageBoxResult.None;
 
             Task task = Task.Factory.StartNew(() =>
             {
@@ -375,7 +396,7 @@ namespace mvvm_light_sample.ViewModel
                 {
                     for (int j = 0; j < 100; j++)
                     {
-                        if (_CancelTokenSource5.IsCancellationRequested)
+                        if (progressTask.CancelToken.IsCancellationRequested)
                         {
                             Debug.WriteLine("キャンセルされました。");
                             return;
@@ -386,6 +407,7 @@ namespace mvvm_light_sample.ViewModel
                         // 進捗表示
                         Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
                         {
+                            VM = vm,
                             ProgressValue1 = (double)(j + 1) * (double)(100 / 100),
                             ProgressValue2 = (double)(i) * (double)(100 / 5),
                         });
@@ -395,17 +417,19 @@ namespace mvvm_light_sample.ViewModel
                     // 進捗表示
                     Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
                     {
+                        VM = vm,
                         Text = string.Format("バックグラウンド処理中...{0}%", parsent),
                         ProgressValue2 = parsent,
                     });
                 }
                 Debug.WriteLine("完了しました。");
 
-            }, _CancelTokenSource5.Token).ContinueWith((t) =>
+            }, progressTask.CancelToken.Token).ContinueWith((t) =>
             {
+
                 string str = string.Empty;
 
-                if (_CancelTokenSource5.IsCancellationRequested)
+                if (progressTask.CancelToken.IsCancellationRequested)
                 {
                     str = "キャンセルされました。";
                 }
@@ -429,25 +453,32 @@ namespace mvvm_light_sample.ViewModel
                         {
                             Debug.WriteLine(result.ToString());
 
-                            _CancelTokenSource5.Dispose();
-                            _CancelTokenSource5 = null;
+                            progressTask.CancelToken.Dispose();
+                            progressTask.CancelToken = null;
 
                             // 処理中ウィンドウクローズ
                             Messenger.Default.Send<ProgressStatusMessage4>(new ProgressStatusMessage4()
                             {
+                                VM = vm,
                                 CloseWindow = true
                             });
+
+                            TaskList.Remove(progressTask);
                         }
                     });
                 });
 
 
             });
+
+            progressTask.Name = task.Id.ToString();
+
+            TaskList.Add(progressTask);
             
             // 処理中ウィンドウ表示
             Messenger.Default.Send<Progress4Message>(new Progress4Message()
             {
-                CancelTokenSource = _CancelTokenSource5,
+                CancelTokenSource = progressTask.CancelToken,
                 IsAsync = true,
                 Text = "バックグラウンド処理中... ",
                 IsIndeterminate1 = false,
@@ -455,10 +486,6 @@ namespace mvvm_light_sample.ViewModel
                 Callback = (viewModel) =>
                 {
                     vm = viewModel as ViewModelBase;
-                    //if (result == MessageBoxResult.Cancel)
-                    //{
-                    //    _CancelTokenSource5.Cancel();
-                    //}
                 },
             });
 
@@ -467,9 +494,13 @@ namespace mvvm_light_sample.ViewModel
         /// <summary>
         /// ２段（非同期）のキャンセル
         /// </summary>
-        private void ProgressCancel5()
+        private void ProgressCancel5(object param)
         {
-            _CancelTokenSource5.Cancel();
+            var task = param as ProgressTask;
+            if (task != null)
+            {
+                task.CancelToken.Cancel();
+            }
         }
 
 

@@ -115,6 +115,7 @@
     <Compile Include="Common\OpenFileTrigger.cs" />
     <Compile Include="Common\ProgressMessage.cs" />
     <Compile Include="Common\ProgressMessageTrigger.cs" />
+    <Compile Include="Common\ProgressTask.cs" />
     <Compile Include="Common\ProgressWindowAction.cs" />
     <Compile Include="Common\SaveFileAction.cs" />
     <Compile Include="Common\SaveFileMessage.cs" />

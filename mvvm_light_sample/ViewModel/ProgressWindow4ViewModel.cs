@@ -33,7 +33,9 @@ namespace mvvm_light_sample.ViewModel
                 {
                     _CancelCommand = new RelayCommand(() =>
                     {
-                        _CancelTokenSource.Cancel();
+                        if(_CancelTokenSource != null)
+                            _CancelTokenSource.Cancel();
+                       
                     });
                 }
 
@@ -194,6 +196,9 @@ namespace mvvm_light_sample.ViewModel
         /// <param name="message"></param>
         public void GetProgressStatusMessage4(ProgressStatusMessage4 message)
         {
+            if (message.VM != this)
+                return;
+
             if (message.Text != null)
                 Text = message.Text;
 

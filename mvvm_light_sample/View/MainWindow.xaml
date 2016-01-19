@@ -79,14 +79,29 @@
                     <Button Command="{Binding ProgressStartCommand4}" Content="処理開始" Margin="5,5,5,5" Name="button7" />
                 </Grid>
             </GroupBox>
-            <GroupBox Header="処理中ダイアログ(非同期,進捗表示２段)" Height="73" Width="250">
+            <GroupBox Header="処理中ダイアログ(非同期,進捗表示２段)" Height="Auto" Width="250">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Command="{Binding ProgressStartCommand5}" Content="処理開始"  Margin="5,5,5,5"/>
-                    <Button Command="{Binding ProgressCancelCommand5}" Content="キャンセル" Grid.Column="1"  Margin="5,5,5,5"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Button Command="{Binding ProgressStartCommand5}" Content="処理開始" Margin="5,5,5,5" />
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding TaskList}" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="None">
+                        <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True"  Binding="{Binding Name}"/>
+                        <DataGridTemplateColumn >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="キャンセル"
+                                        Command="{Binding Path=DataContext.ProgressCancelCommand5, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                        />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
                 </Grid>
             </GroupBox>
         </WrapPanel>
